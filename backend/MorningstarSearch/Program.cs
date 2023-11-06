@@ -13,18 +13,26 @@ builder.Services.AddDbContext<PeopleDbContext>(options =>
 });
 
 builder.Services.AddScoped<ISearchService, SearchService>();
-
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
 app.MigrateDatabaseChanges<PeopleDbContext>();
 
+app.UseCors(corsBuilder =>
+{
+    corsBuilder.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+});
+
 app.MapGet("/search/{searchTerm}",
-    ([FromRoute] string searchTerm, ISearchService searchService) => searchTerm == null ? Results.BadRequest() : Results.Ok(searchService.Search(searchTerm)));
+    async ([FromRoute] string searchTerm, ISearchService searchService) => searchTerm == null ? Results.BadRequest() : Results.Ok(await searchService.Search(searchTerm)));
 
 app.MapPost("/people",
-    ([FromBody] List<PersonDto> people, ISearchService searchService) => searchService.AddPeople(people));
+    async ([FromBody] List<PersonDto> people, ISearchService searchService) => await searchService.AddPeople(people));
 
 app.UseSwagger();
 app.UseSwaggerUI();

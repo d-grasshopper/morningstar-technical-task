@@ -1,19 +1,21 @@
 using System.Text.Json.Serialization;
-using Newtonsoft.Json;
 
 namespace MorningstarSearch.Models.DTOs;
 
 public class PersonDto
 {
+    [JsonPropertyName("id")]
     public int Id { get; set; }
     
-    [JsonProperty("first_name")]
+    [JsonPropertyName("first_name")]
     public string FirstName { get; set; }
     
-    [JsonProperty("last_name")]
+    [JsonPropertyName("last_name")]
     public string LastName { get; set; }
     
+    [JsonPropertyName("email")]
     public string Email { get; set; }
     
+    [JsonPropertyName("gender")]
     public string Gender { get; set; }
 }
