@@ -1,11 +1,35 @@
+using Mapster;
+using Microsoft.EntityFrameworkCore;
+using MorningstarSearch.Data;
+using MorningstarSearch.Models;
 using MorningstarSearch.Models.DTOs;
 
 namespace MorningstarSearch.Services;
 
 public class SearchService: ISearchService
 {
-    public IEnumerable<PersonDto> Search(string searchTerm)
+    private PeopleDbContext _context { get; }
+    
+    public SearchService(PeopleDbContext context)
     {
-        return new List<PersonDto>();
+        _context = context;
+    }
+    
+    public async Task<IEnumerable<PersonDto>> Search(string searchTerm)
+    {
+        if (searchTerm == "") return new List<PersonDto>();
+        
+        var results = await _context.People.Where(person =>
+                $"{person.FirstName} {person.LastName}".Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                person.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+        ).ToListAsync();
+        
+        return results.Adapt<List<PersonDto>>();
+    }
+    
+    public async Task AddPeople(List<PersonDto> people)
+    {
+        await _context.AddRangeAsync(people.Adapt<List<Person>>());
+        await _context.SaveChangesAsync();
     }
 }

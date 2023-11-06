@@ -5,7 +5,7 @@ namespace MorningstarSearch.Data;
 
 public class PeopleDbContext : DbContext
 {
-    public DbSet<Person> Notes { get; set; }
+    public DbSet<Person> People { get; set; }
 
     public PeopleDbContext(DbContextOptions options) : base(options)
     {

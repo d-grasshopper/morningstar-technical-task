@@ -4,5 +4,7 @@ namespace MorningstarSearch.Services;
 
 public interface ISearchService
 {
-    IEnumerable<PersonDto> Search(string searchTerm);
+    Task<IEnumerable<PersonDto>> Search(string searchTerm);
+
+    Task AddPeople(List<PersonDto> people);
 }
