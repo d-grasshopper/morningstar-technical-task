@@ -21,7 +21,7 @@ docker-compose up -d --build --remove-orphans
 ```zsh
 cd frontend
 
-npm run start
+npm i && npm run start
 ```
 
 3. Open `http://localhost:5005/swagger`
