@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  people-api:
+    build:
+      context: ./backend
+    ports:
+      - "5005:5005"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+    networks:
+      - morningstar-backend
+
+  people-db:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    restart: always
+    environment:
+      MSSQL_SA_PASSWORD: "KestenNenamesten1!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - people-db:/var/lib/sqlserver
+    networks:
+      - morningstar-backend
+
+volumes:
+  people-db:
+
+networks:
+  morningstar-backend:
